@@ -4,23 +4,23 @@ def init_db():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     
-    # Crear tabla de usuarios
+    # Borramos la tabla vieja si existe para limpiar la estructura
+    cursor.execute('DROP TABLE IF EXISTS users')
+    
+    # Creamos la tabla con los campos exactos que pediste (+ password)
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL,
+            email TEXT NOT NULL,
             password TEXT NOT NULL,
-            role TEXT NOT NULL
+            registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     
-    # Insertar usuarios de prueba (Admin y Analyst)
-    cursor.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'SuperSecretPassword2026', 'Admin')")
-    cursor.execute("INSERT INTO users (username, password, role) VALUES ('analyst_1', 'analyst123', 'Analyst')")
-    
     conn.commit()
     conn.close()
-    print("Base de datos inicializada con éxito.")
+    print("Base de datos recreada con la nueva estructura (id, username, email, password, fecha).")
 
 if __name__ == '__main__':
     init_db()
